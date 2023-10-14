@@ -1,5 +1,10 @@
-const array = new StaticArray<u8>(0xffff);
+const staticArray = new StaticArray<u8>(0xffff);
+const array = new Uint8Array(0xffff);
 
-export function getArray(): StaticArray<u8> {
+export function getArray(): Uint8Array {
   return array;
+}
+
+export function getStaticArray(): StaticArray<u8> {
+  return staticArray;
 }

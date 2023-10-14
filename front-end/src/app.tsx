@@ -1,20 +1,18 @@
-import { wrap } from "comlink";
-import { WorkerAPI } from "./worker.ts";
+import { WasmProvider } from "@/components/wasm-provider";
+import Controls from "./components/controls";
+import Screen from "./components/screen";
 
-const worker = new Worker(new URL("./worker.ts", import.meta.url), {
-  type: "module",
-});
-
-const workerAPI = wrap<WorkerAPI>(worker);
-
-export function App() {
+export default function App() {
   return (
-    <div className="bg-red-100 w-screen h-screen">
-      <h1 className="text-3xl font-bold bg-fuchsia-500 underline">
-        Hello world!
-      </h1>
+    <WasmProvider>
+      <div className="w-screen h-screen flex flex-row">
+        <div className="flex flex-col w-64">
+          <Screen />
+          <Controls />
+        </div>
 
-      <button></button>
-    </div>
+        <div className="flex-1"></div>
+      </div>
+    </WasmProvider>
   );
 }

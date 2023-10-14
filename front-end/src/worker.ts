@@ -1,13 +1,6 @@
 import { expose } from "comlink";
-import * as wasmFnc from "./build/release.js";
+import * as wasmFnc from "./build/debug";
 
-const api = {
-  getArray: () => {
-    const array = wasmFnc.getArray();
-    console.log(array);
-  },
-};
+expose(wasmFnc);
 
-expose(api);
-
-export type WorkerAPI = typeof api;
+export type WorkerAPI = typeof wasmFnc;
