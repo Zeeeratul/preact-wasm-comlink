@@ -1,10 +1,21 @@
-const staticArray = new StaticArray<u8>(0xffff);
-const array = new Uint8Array(0xffff);
+import Gameboy from "./gameboy";
 
-export function getArray(): Uint8Array {
-  return array;
+let gameboy: Gameboy | null = null;
+
+export function isGameboyInitialized(): bool {
+  return !!gameboy;
 }
 
-export function getStaticArray(): StaticArray<u8> {
-  return staticArray;
+export function initGameboy(romBuffer: Uint8Array): void {
+  gameboy = new Gameboy(romBuffer);
+}
+
+export function step(stepNumber: u32): void {
+  if (!isGameboyInitialized()) return;
+  gameboy!.step();
+}
+
+export function runFrame(frameNumber: u32): void {
+  if (!isGameboyInitialized()) return;
+  gameboy!.step();
 }

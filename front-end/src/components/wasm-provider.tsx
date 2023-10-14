@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+import { useContext } from "preact/hooks";
+import { createContext } from "preact";
 import { Remote, wrap } from "comlink";
 import type { WorkerAPI } from "../worker";
 
@@ -12,7 +13,7 @@ type Context = Remote<WorkerAPI>;
 
 const WasmProviderContext = createContext<Context>(undefined!);
 
-export function WasmProvider({ children }: { children: React.ReactNode }) {
+export function WasmProvider({ children }: { children: any }) {
   return (
     <WasmProviderContext.Provider value={workerAPI}>
       {children}
