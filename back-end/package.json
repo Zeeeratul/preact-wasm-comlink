@@ -5,15 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "node tests",
-    "asbuild:debug": "asc assembly/index.ts --target debug",
-    "asbuild:release": "asc assembly/index.ts --target release",
-    "asbuild": "npm run asbuild:debug && npm run asbuild:release && rm -rf ../front-end/src/build && cp -r ./build ../front-end/src/build",
+    "asbuild:debug": "asc assembly/index.ts --target debug && rm -rf ../front-end/src/build/debug* && cp ./build/debug* ../front-end/src/build/",
+    "asbuild:release": "asc assembly/index.ts --target release && rm -rf ../front-end/src/build/release* && cp ./build/release* ../front-end/src/build/",
+    "asbuild": "npm run asbuild:debug && npm run asbuild:release",
+    "watch": "nodemon --watch assembly -e ts --exec 'npm run asbuild:debug'",
     "start": "npx serve ."
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "assemblyscript": "^0.27.13"
+    "assemblyscript": "^0.27.13",
+    "nodemon": "^3.0.1"
   },
   "type": "module",
   "exports": {
