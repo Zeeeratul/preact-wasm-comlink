@@ -2,7 +2,6 @@ import CPU from "../cpu";
 
 export default class Memory {
   static buffer: StaticArray<u8> = new StaticArray<u8>(0xffff).fill(0);
-  static romBuffer: Uint8Array = new Uint8Array(0);
 
   static readByte(address: u16): u8 {
     return Memory.buffer[address];

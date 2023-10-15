@@ -2,8 +2,6 @@ import { useContext, useState } from "preact/hooks";
 import { createContext } from "preact";
 import * as gameboy from "../build/debug";
 
-let cartridge: Uint8Array | null = null;
-
 interface State {}
 
 const GameboyProviderContext = createContext<{
@@ -18,24 +16,26 @@ export function GameboyProvider({ children }: { children: any }) {
 
   function play(type: "frame" | "step", nb = 1) {
     if (nb <= 0) return;
-    if (!cartridge) return alert("Load a rom please");
+    if (!gameboy.isGameboyInit()) return alert("Load a rom please");
 
     switch (type) {
       case "step": {
-        gameboy.step(nb);
+        gameboy.runStep(nb);
         break;
       }
     }
   }
 
   function reset() {
-    if (!cartridge) return alert("Load a rom please");
-    gameboy.initGameboy(cartridge);
+    if (!gameboy.isGameboyInit()) return alert("Load a rom please");
+
+    gameboy.reset();
   }
 
   function loadCartridge(buffer: Uint8Array) {
-    cartridge = buffer;
-    gameboy.initGameboy(buffer);
+    if (buffer.length < 0x8000) return alert("Rom is invalid or too short");
+
+    gameboy.loadRom(buffer);
   }
 
   return (
