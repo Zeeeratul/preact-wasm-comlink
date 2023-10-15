@@ -11,21 +11,21 @@ const workerAPI = wrap<WorkerAPI>(worker);
 
 type Context = Remote<WorkerAPI>;
 
-const WasmProviderContext = createContext<Context>(undefined!);
+const GameboyProviderContext = createContext<Context>(undefined!);
 
-export function WasmProvider({ children }: { children: any }) {
+export function GameboyProvider({ children }: { children: any }) {
   return (
-    <WasmProviderContext.Provider value={workerAPI}>
+    <GameboyProviderContext.Provider value={workerAPI}>
       {children}
-    </WasmProviderContext.Provider>
+    </GameboyProviderContext.Provider>
   );
 }
 
-export const useWasm = () => {
-  const context = useContext(WasmProviderContext);
+export const useGameboy = () => {
+  const context = useContext(GameboyProviderContext);
 
   if (context === undefined)
-    throw new Error("useWasm must be used within a WasmProvider");
+    throw new Error("useGameboy must be used within a GameboyProvider");
 
   return context;
 };

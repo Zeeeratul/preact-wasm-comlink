@@ -1,20 +1,22 @@
+import CPU from "./components/cpu";
 import Memory from "./components/memory";
 import PPU from "./components/ppu";
 
 export default class Gameboy {
-  private memory: Memory = null!;
-  private ppu: PPU = null!;
+  memory: Memory;
+  ppu: PPU;
+  cpu: CPU;
 
   constructor(romBuffer: Uint8Array) {
-    if (romBuffer.length <= 0) {
+    if (romBuffer.length < 0x8000) {
       throw new Error("romBuffer is empty or has an invalid size.");
     }
 
-    this.memory = new Memory(romBuffer);
-    this.ppu = new PPU(this.memory);
+    const memory = new Memory(romBuffer);
+    this.memory = memory;
+    this.ppu = new PPU(memory);
+    this.cpu = new CPU(memory);
   }
 
-  step(): void {
-    console.log(this.ppu.getNumber().toString());
-  }
+  step(): void {}
 }

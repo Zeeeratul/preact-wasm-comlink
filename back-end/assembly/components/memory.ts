@@ -1,7 +1,14 @@
 export default class Memory {
-  constructor(romBuffer: Uint8Array) {
-    // Chargez le romBuffer dans la mémoire appropriée (par exemple, la ROM de la cartouche)
-  }
+  buffer: StaticArray<u8>;
+  romBuffer: Uint8Array;
 
-  // ... autres méthodes et propriétés de la mémoire ...
+  constructor(romBuffer: Uint8Array) {
+    this.romBuffer = romBuffer;
+    this.buffer = new StaticArray<u8>(0xffff).fill(0);
+
+    for (let i = 0; i < 0x8000; i++) {
+      console.log(i.toString());
+      unchecked((this.buffer[i] = romBuffer[i]));
+    }
+  }
 }
