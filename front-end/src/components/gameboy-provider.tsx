@@ -1,21 +1,52 @@
-import { useContext } from "preact/hooks";
+import { useContext, useState } from "preact/hooks";
 import { createContext } from "preact";
-import { Remote, wrap } from "comlink";
-import type { WorkerAPI } from "../worker";
+import * as gameboy from "../build/debug";
 
-const worker = new Worker(new URL("../worker.ts", import.meta.url), {
-  type: "module",
-});
+let cartridge: Uint8Array | null = null;
 
-const workerAPI = wrap<WorkerAPI>(worker);
+interface State {}
 
-type Context = Remote<WorkerAPI>;
-
-const GameboyProviderContext = createContext<Context>(undefined!);
+const GameboyProviderContext = createContext<{
+  play: (type: "frame" | "step", nb: number) => void;
+  reset: () => void;
+  loadCartridge: (cartridge: Uint8Array) => void;
+  state: State;
+}>(undefined!);
 
 export function GameboyProvider({ children }: { children: any }) {
+  const [state, setState] = useState<State>({});
+
+  function play(type: "frame" | "step", nb = 1) {
+    if (nb <= 0) return;
+    if (!cartridge) return alert("Load a rom please");
+
+    switch (type) {
+      case "step": {
+        gameboy.step(nb);
+        break;
+      }
+    }
+  }
+
+  function reset() {
+    if (!cartridge) return alert("Load a rom please");
+    gameboy.initGameboy(cartridge);
+  }
+
+  function loadCartridge(buffer: Uint8Array) {
+    cartridge = buffer;
+    gameboy.initGameboy(buffer);
+  }
+
   return (
-    <GameboyProviderContext.Provider value={workerAPI}>
+    <GameboyProviderContext.Provider
+      value={{
+        play,
+        reset,
+        loadCartridge,
+        state,
+      }}
+    >
       {children}
     </GameboyProviderContext.Provider>
   );
@@ -24,8 +55,9 @@ export function GameboyProvider({ children }: { children: any }) {
 export const useGameboy = () => {
   const context = useContext(GameboyProviderContext);
 
-  if (context === undefined)
+  if (context === undefined) {
     throw new Error("useGameboy must be used within a GameboyProvider");
+  }
 
   return context;
 };

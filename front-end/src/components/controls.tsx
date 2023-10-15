@@ -2,22 +2,17 @@ import { useRef } from "preact/hooks";
 import { useGameboy } from "./gameboy-provider";
 
 export default function Controls() {
-  const { play, pause, reset, loadRom } = useGameboy();
+  const { play, reset, loadCartridge } = useGameboy();
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const handlePlay = async () => {
-    const data = await play("frame");
-    console.log(data);
+  const handlePlay = () => {
+    play("step", 1);
   };
 
-  const handlePause = async () => {
-    const data = await pause();
-    console.log(data);
-  };
+  const handlePause = async () => {};
 
   const handleReset = async () => {
-    const data = await reset();
-    console.log(data);
+    const data = reset();
   };
 
   const handleLoadRom = () => {
@@ -33,7 +28,7 @@ export default function Controls() {
         if (e.target?.result instanceof ArrayBuffer) {
           const arrayBuffer = e.target.result;
           const rom = new Uint8Array(arrayBuffer);
-          await loadRom(rom);
+          loadCartridge(rom);
         }
       };
       reader.readAsArrayBuffer(file);
